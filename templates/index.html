@@ -6,16 +6,26 @@
     <title>Ria Lavenia Kharissa - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+
 </head>
 
 <body>
     <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Ria Lavenia Kharissa</a>
-            <nav>
-                <a href="#profile">Profile</a>
+        <div class="container site-header-container">
+            <a href="#" class="brand">Laven</a>
+            <input type="checkbox" class="menu-checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+
+            <nav class="nav-right">
+                <a href="#profile">About Me</a>
+                <a href="#experience">Experience</a>
+                <!-- <a href="#">Contact Me</a> -->
             </nav>
         </div>
     </header>
@@ -25,14 +35,14 @@
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>Burhan</h1>
+                    <h1>Ria Lavenia Kharissa</h1>
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
                     <img class="avatar" src="/static/img/laven.png" alt="Photo of Laven">
                 </div>
                 <div class="hero-details">
-                    <p class="bio">Computer Science student at Universitas Indonesia, still figuring things out and occasionally wondering how she ended up in Fasilkom in the first place.</p>
+                    <p class="bio">I am an Information Systems student at the University of Indonesia with a strong passion for business and technology, particularly in web development, design, and product management. I am someone who loves to learn, is ambitious to grow, and enjoys social activities.</p>
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>NPM</dt>
@@ -43,11 +53,113 @@
                             <dd>S1 Sistem Informasi</dd>
                         </div>
                     </dl>
-                    <div class="social-links"> //
-                        <a href="https://github.com/" class="social-link">GitHub</a>
-                        <a href="https://linkedin.com/" class="social-link">LinkedIn</a>
-                        <a href="mailto:burhan@example.com" class="social-link">Email</a>
+                    <div class="social-links"> 
+                        <a href="https://github.com/mickiepie" class="social-link">GitHub</a>
+                        <a href="https://www.linkedin.com/in/ria-lavenia/" class="social-link">LinkedIn</a>
+                        <a href="mailto:ria.lavenia@ui.ac.id" class="social-link">Email</a>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="experience" id="experience">
+            <div class="container">
+                <h2 class="section-title">Experiences</h2>
+                <div class="experience-container">
+                    <!-- card 1 -->
+                    <div class="exp-slide">
+                        <div class="exp-left">
+                            <div class="exp-img-box">
+                                <img src="/static/img/OH.jpg" alt="Open House Fasilkom UI">
+                            </div>
+                            <h3>Open House Fasilkom UI</h3>
+                            <p class="exp-role">Public Relation Staff</p>
+                            <p class="exp-year">2025</p>
+                        </div>
+                        <div class="exp-right">
+                            <h3>Role Summary</h3>
+                            <p>Served as Master of Ceremony and faculty representative in school visitation programs, delivering presentations and engaging prospective students to promote Fakultas Ilmu Komputer Universitas Indonesia.</p>
+                        </div>
+                    </div>
+                    <!-- card 2 -->
+                    <div class="exp-slide">
+                        <div class="exp-left">
+                            <div class="exp-img-box">
+                                <img src="/static/img/senbud.jpg" alt="Department of Arts and Culture">
+                            </div>
+                            <h3>BEM Seni Budaya</h3>
+                            <p class="exp-role">Creative Division Intern</p>
+                            <p class="exp-year">2025</p>
+                        </div>
+                        <div class="exp-right">
+                            <h3>Role Summary</h3>
+                            <p>Managed end-to-end design process, from concept generation to final execution, creating high-impact visual content for event promotion and digital outreach.</p>
+                        </div>
+                    </div>
+
+                    <!-- card 3 -->
+                    <div class="exp-slide">
+                        <div class="exp-left">
+                            <div class="exp-img-box">
+                                <img src="/static/img/betis.jpg" alt="BETIS Faasilkom UI">
+                            </div>
+                            <h3>BETIS Fasilkom UI</h3>
+                            <p class="exp-role">Event Division Staff</p>
+                            <p class="exp-year">2026</p>
+                        </div>
+                        <div class="exp-right">
+                            <h3>Role Summary</h3>
+                            <p>Contributed to event coordination and worked closely with all staff to ensure smooth and successful event execution.</p>
+                        </div>
+                    </div>
+
+                    <!-- card 4 -->
+                    <div class="exp-slide">
+                        <div class="exp-left">
+                            <div class="exp-img-box">
+                                <img src="/static/img/ristek.jpg" alt="RISTEK">
+                            </div>
+                            <h3>RISTEK Fasilkom UI</h3>
+                            <p class="exp-role">People Operations Member</p>
+                            <p class="exp-year">2026</p>
+                        </div>
+                        <div class="exp-right">
+                            <h3>Role Summary</h3>
+                            <p>Managed end-to-end internal human resources operations, bridging communication gaps and fostering a cohesive culture across all organizational divisions</p>
+                        </div>
+                    </div>
+
+                    <!-- card 5 -->
+                    <div class="exp-slide">
+                        <div class="exp-left">
+                            <div class="exp-img-box">
+                                <img src="/static/img/ascii.jpg" alt="Ascipella">
+                            </div>
+                            <h3>Ascipella Fasilkom UI</h3>
+                            <p class="exp-role">Vice Chairperson</p>
+                            <p class="exp-year">2026</p>
+                        </div>
+                        <div class="exp-right">
+                            <h3>Role Summary</h3>
+                            <p>Designed work programs and managed end-to-end project operations, ensuring Ascipella successfully serves as a thriving communityfor Fasilkom UI students to explore their musical and vocal talents.</p>
+                        </div>
+                    </div>
+                    <!-- card 6 -->
+                    <div class="exp-slide">
+                        <div class="exp-left">
+                            <div class="exp-img-box">
+                                <img src="/static/img/ddp0.jpg" alt="DDP0">
+                            </div>
+                            <h3>DDP0 Fasilkom UI</h3>
+                            <p class="exp-role">Mentor</p>
+                            <p class="exp-year">2026</p>
+                        </div>
+                        <div class="exp-right">
+                            <h3>Role Summary</h3>
+                            <p>Mentored freshman students in learning foundational Python programming, ensuring they build a strong technical base ahead of Dasar-Dasar Pemrograman 1 (DDP1) </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
