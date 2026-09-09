@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ria Lavenia Kharissa - Portfolio</title>
+    <title>{{ name }} - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
     <header class="site-header">
         <div class="container site-header-container">
-            <a href="#" class="brand">Laven</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
             <input type="checkbox" class="menu-checkbox" id="menu-toggle">
             <label for="menu-toggle" class="hamburger">
                 <span></span>
@@ -22,11 +22,10 @@
                 <span></span>
             </label>
 
-            <nav class="nav-right">
-                <a href="#profile">About Me</a>
-                <a href="#experience">Experience</a>
-                <!-- <a href="#">Contact Me</a> -->
-            </nav>
+            <nav>
+            <a href="{% url 'main:show_main' %}">Profile</a>
+            <a href="{% url 'main:show_experience' %}">Experience</a>
+        </nav>
         </div>
     </header>
 
@@ -34,23 +33,23 @@
         <section class="hero" id="profile">
             <div class="container hero-grid">
                 <div class="hero-identity">
-                    <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>Ria Lavenia Kharissa</h1>
+                    <p class="hero-kicker">Information System &middot; Universitas Indonesia</p>
+                    <h1>{{ name }}</h1>
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/laven.png" alt="Photo of Laven">
+                    <img class="avatar" src="/static/img/laven.png" alt="Photo of {{ brand }}">
                 </div>
                 <div class="hero-details">
-                    <p class="bio">I am an Information Systems student at the University of Indonesia with a strong passion for business and technology, particularly in web development, design, and product management. I am someone who loves to learn, is ambitious to grow, and enjoys social activities.</p>
+                    <p class="bio"> {{ bio }}</p>
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>NPM</dt>
-                            <dd>2506543905</dd>
+                            <dd>{{ npm }}</dd>
                         </div>
                         <div class="meta-row">
                             <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
+                            <dd> {{ study_program }}</dd>
                         </div>
                     </dl>
                     <div class="social-links"> 
@@ -62,130 +61,12 @@
             </div>
         </section>
 
-        <section class="experience" id="experience">
-            <div class="container">
-                <h2 class="section-title">Experiences</h2>
-                <div class="experience-container">
-                    <!-- card 1 -->
-                    <div class="exp-slide">
-                        <div class="exp-left">
-                            <div class="exp-img-box">
-                                <img src="/static/img/OH.jpg" alt="Open House Fasilkom UI">
-                            </div>
-                            <h3>Open House Fasilkom UI</h3>
-                            <p class="exp-role">Public Relation Staff</p>
-                            <p class="exp-year">2025</p>
-                        </div>
-                        <div class="exp-right">
-                            <h3>Key Contributions</h3>
-                            <ul class="contribution-list">
-                                <li>Served as Master of Ceremony and faculty representative in school visitation programs.</li>
-                                <li>Delivered presentations and engaged prospective students to promote Fakultas Ilmu Komputer Universitas Indonesia.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- card 2 -->
-                    <div class="exp-slide">
-                        <div class="exp-left">
-                            <div class="exp-img-box">
-                                <img src="/static/img/senbud.jpg" alt="Department of Arts and Culture">
-                            </div>
-                            <h3>BEM Seni Budaya</h3>
-                            <p class="exp-role">Creative Division Intern</p>
-                            <p class="exp-year">2025</p>
-                        </div>
-                        <div class="exp-right">
-                            <h3>Key Contributions</h3>
-                            <ul class="contribution-list">
-                                <li>Managed end-to-end design process, from concept generation to final execution.</li>
-                                <li>Created high-impact visual content for event promotion and digital outreach.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- card 3 -->
-                    <div class="exp-slide">
-                        <div class="exp-left">
-                            <div class="exp-img-box">
-                                <img src="/static/img/betis.jpg" alt="BETIS Faasilkom UI">
-                            </div>
-                            <h3>BETIS Fasilkom UI</h3>
-                            <p class="exp-role">Event Division Staff</p>
-                            <p class="exp-year">2026</p>
-                        </div>
-                        <div class="exp-right">
-                            <h3>Key Contributions</h3>
-                            <ul class="contribution-list">
-                                <li>Contributed to event coordination.</li>
-                                <li>Worked closely with all staff to ensure smooth and successful event execution.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- card 4 -->
-                    <div class="exp-slide">
-                        <div class="exp-left">
-                            <div class="exp-img-box">
-                                <img src="/static/img/ristek.jpg" alt="RISTEK">
-                            </div>
-                            <h3>RISTEK Fasilkom UI</h3>
-                            <p class="exp-role">People Operations Member</p>
-                            <p class="exp-year">2026</p>
-                        </div>
-                        <div class="exp-right">
-                            <h3>Key Contributions</h3>
-                            <ul class="contribution-list">
-                                <li>Managed end-to-end internal human resources operations.</li>
-                                <li>Bridged communication gaps and fostered a cohesive culture across all organizational divisions.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- card 5 -->
-                    <div class="exp-slide">
-                        <div class="exp-left">
-                            <div class="exp-img-box">
-                                <img src="/static/img/ascii.jpg" alt="Ascipella">
-                            </div>
-                            <h3>Ascipella Fasilkom UI</h3>
-                            <p class="exp-role">Vice Chairperson</p>
-                            <p class="exp-year">2026</p>
-                        </div>
-                        <div class="exp-right">
-                            <h3>Key Contributions</h3>
-                            <ul class="contribution-list">
-                                <li>Designed work programs and managed end-to-end project operations.</li>
-                                <li>Ensured Ascipella successfully serves as a thriving community for Fasilkom UI students to explore their musical and vocal talents.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- card 6 -->
-                    <div class="exp-slide">
-                        <div class="exp-left">
-                            <div class="exp-img-box">
-                                <img src="/static/img/ddp0.jpg" alt="DDP0">
-                            </div>
-                            <h3>DDP0 Fasilkom UI</h3>
-                            <p class="exp-role">Mentor</p>
-                            <p class="exp-year">2026</p>
-                        </div>
-                        <div class="exp-right">
-                            <h3>Key Contributions</h3>
-                            <ul class="contribution-list">
-                                <li>Mentored freshman students in learning foundational Python programming.</li>
-                                <li>Ensured they build a strong technical base ahead of Fundamental Programming 1 (DDP1).</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
+        
     </main>
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Ria Lavenia Kharissa. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
 </body>
