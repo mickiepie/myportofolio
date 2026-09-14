@@ -23,3 +23,26 @@ Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas ini. Saya menggunakan
 
 ## Tugas 2
 
+1. Alurkerja Django saat Pengguna Membuka Halaman Projects:
+- Pengguna mengetik alamat web di browser(contoh: `/experience/`)
+- routing utama, yaitu Django menerima permintaan lalu melemparnya ke file pengatur alamat(`main/urls.py`)
+- routing aplikasi. Terjadi ketika file mencocokkan alamat `/experience/` dengan dungsi pemrosesannya di `views.py`, yaitu `show_experience`.
+- pemrosesan utama, dimana fungsi `show_experience` menghubungi model untuk meminta daftar experience
+- model dan database. Model mengambil data experience yang tersimpan lalu menyerahkannya kembali ke view.
+- template, yaitu `experience.html`. View membungkus data experience ke dalam contex lalu mengumpankannya ke berkas html(`experience.html`). disini django template language memproses dan merender data satu per satu menjadi bentuk kartu pengalaman
+- tampilan akhir. Server mengirimkan hasil akhir berupa html utuk kembali ke browser pengguna untuk ditampilkan ke layar.
+
+2. Alasan menggunakan model adalah agar ketika kita ingin mengedit proyek, kita cukup memperbaruinya dari shell/database tanpa perlu membongkar kode html lagi. selain itu, kode juga lebih rapi dan data lebih dinamis
+
+3. Perbedaan `makemigrations` dan `migrate` adalah:
+- `makemigrations`: membuat draf rencana perubahan.
+- `migrate`: menerapkan rencana secara nyata ke database. `migrate` mengeksekusi catatan dari `makemigrations` dan langsung membuatkan kolom/tabel di database
+- contoh: ketika menambahkan field `thumbnail = models.URLField(...)` di `models.py`, kita wajib menjalankan `python manage.py makemigrations` untuk membuat drafnya, kemudian menjalankan `python manage.py migrate` supaya kolom tersebut dibuat di dalam tabel database.
+
+## Penggunaan AI
+
+Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas 2 ini. Saya menggunakan AI untuk:
+
+- Membantu merancang sttruktur model `Project` serta menanganipenambahan field baru
+- Menyusun skenario pengujian pada `test,py`
+- memahami alur request response Django dan membedah konsep dasar untuk menjawab pertanyaan reflektif no 1 pada tugas 2
