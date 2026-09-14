@@ -20,3 +20,6 @@ Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas ini. Saya menggunakan
 - Merancang hamburger menu interaktif menggunakan checkbox
 - Menambahkan efek gradasi warna bergerak(animated gradient) pada latar belakang foto profil
 - Memahami fungsi horizontal scrolling pada section Experience menggunakan properti CSS seperti `overflow-x` `scroll-snap`, dan kustomisasi tampilan scrollbar dengan `::-webkit-scrollbar` agar kartu pengalamannya dapat bergeser dan estetik.
+
+## Tugas 2
+
