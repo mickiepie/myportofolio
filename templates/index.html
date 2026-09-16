@@ -14,18 +14,8 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <nav class="navbar container">
-            <a href="{% url 'main:show_main' %}" class="nav-brand-capsule">{{brand}}</a>
-
-            <div class="nav-menu-capsule">
-                <a href="{% url 'main:show_main' %}">HOME</a>
-                <a href="{% url 'main:show_experience' %}">EXPERIENCE</a>
-                <a href="{% url 'main:show_projects' %}">PROJECTS</a>
-            </div>
-        </nav>
-    </header>
-
+    {% extends 'base.html' %}
+    {% block content %}
     <main>
         <section class="hero" id="home">
             <div class="hero-center">
@@ -100,11 +90,6 @@
             </div>
         </section>
     </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
-        </div>
-    </footer>
+    {% endblock content %}
 </body>
 </html>
