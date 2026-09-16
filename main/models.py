@@ -34,7 +34,6 @@ class Project(models.Model):
     thumbnail = models.URLField(blank=True, null=True)
     tech_stack = models.CharField(max_length=255)  
     link = models.URLField(blank=True, null=True)     
-    created_at = models.DateField()
 
     def __str__(self):
         return self.title
