@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block meta %}
-    <title>Add Project - {{ name }}</title>
+    <title>Add Experience - {{ name }}</title>
 {% endblock meta %}
 {% block content %}
     <main>
         <section class="experience-section">
             <div class="container">
-                <h1 class="add-project-h1">Add New <span>Project</span></h1>
+                <h1 class="add-project-h1">Add New <span>Experience</span></h1>
                 <div class="form-style">
 
                     <form method="post"
-                        action="{% url 'main:create_project' %}"
+                        action="{% url 'main:create_experience' %}"
                         class="project-form">
                         {% csrf_token %}
                         {% for field in form %}
@@ -23,8 +23,8 @@
                             </div>
                         {% endfor %}
                         <div class="form-action">
-                            <button type="submit" class="button">Tambah Project</button>
-                            <a href="{% url 'main:show_projects' %}" class="button button-secondary">Batal</a>
+                            <button type="submit" class="button">Tambah Pengalaman</button>
+                            <a href="{% url 'main:show_experience' %}" class="button button-secondary">Batal</a>
     
                         </div>
                     </form>

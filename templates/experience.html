@@ -1,35 +1,33 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Experience - {{ name }}</title>
+{% endblock meta %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name }} - Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>   
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
+{% load static %}
 
-</head>
-
-<body>
-    <header class="site-header">
-        <nav class="navbar container">
-            <a href="{% url 'main:show_main' %}" class="nav-brand-capsule">{{brand}}</a>
-
-            <div class="nav-menu-capsule">
-                <a href="{% url 'main:show_main' %}">HOME</a>
-                <a href="{% url 'main:show_experience' %}">EXPERIENCE</a>
-                <a href="{% url 'main:show_projects' %}">PROJECTS</a>
-            </div>
-        </nav>
-    </header>
-
+    {% block content %}
     <main>
         <section class="experience-section container" id="experience">
             <div class="experience-header">
                 <h1 class="page-title">Experience</h1>
+            </div>
+
+            <div class="project-toolbar">
+                <form method="GET" action="{% url 'main:show_experience' %}" class="project-search">
+                    <input type="search"
+                        name="title"
+                        value="{{ title_query }}"
+                        placeholder="Cari berdasarkan nama pengalaman"
+                        class="project-search-input"
+                        aria-label="Cari berdasarkan nama pengalaman">
+                    <button type="submit" class="project-button">Cari</button>
+                </form>
+                
+                <a href="{% url 'main:create_experience' %}" class="project-button">
+                    Tambah Pengalaman
+                </a>
+                
+
             </div>
 
             <div class="experience-grid">
@@ -61,26 +59,31 @@
 
                     <!-- deskripsi pengalaman -->
                     <div class="experience-card-body">
-                        <h2 class="experience-title">{{ experience.title }}</h2>
+                        <h2 class="experience-title">{{ experience.title }} -
+                            {{experience.role}}
+                        </h2>
                         <p class="experience-description">
                             {{experience.description}}
                         </p>
+
+                        <!-- edit & hapus -->
+                        <div style="margin-top: 1rem; display: flex; justify-content: flex-end; align-items: center; gap:0.75rem;">
+                            <a href="{% url 'main:edit_experience' experience.id %}" class="project-button">Edit</a>  
+                            {% include "components/experience_delete_modal.html" with experience=experience%}        
+
+                        </div>
                     </div>
                 </article> 
                 {% empty %}
-                <p class="empty-state">
-                    No experience has been added yet.
-                </p>
-                {% endfor %} 
-            </div>         
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #777; font-style: italic;">
+                    <p>No experience has been added yet.</p>
+                </div>
+                {% endfor %}  
+            </div>       
         </section>
     </main>
+    {% endblock content %}
 
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
-        </div>
-    </footer>
-</body>
-</html>
+
+
