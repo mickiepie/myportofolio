@@ -46,3 +46,38 @@ Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas 2 ini. Saya menggunak
 - Membantu merancang sttruktur model `Project` serta menanganipenambahan field baru
 - Menyusun skenario pengujian pada `test,py`
 - memahami alur request response Django dan membedah konsep dasar untuk menjawab pertanyaan reflektif no 1 pada tugas 2
+
+### Tugas 3
+
+1. Penggunaan `ModelForm` alih-alih form HTML manual:
+    `ModelForm` digunakan karena memiliki beberapa manfaat, yaitu menghemat waktu, menyederhanakan validasi, menghindari pengulangan logika, dan meningkatkan keamanan. Selain itu, `ModelForm` memiliki fitur otomatis yang cocok untuk proses CRUD. Dengan `ModelForm1 kita dapat mengambil field dan aturan validasi dari model secara otomatis, sehingga kita tidak perlu menulis ulang kode.
+
+    Mengapa kita diwajibkan menambahkan `{% csrf_token %}` pada form:
+    Penambahan `{% csrf_token %}` digunakan untuk melindungi aplikasi dari serangan keamanan Cross-Site Request Forgery(CSRF). Serangan yang ada dapat berupa pencurian data pribaadi,transaksi tidak sah, hingga perubahan data penting.
+
+2. JSON lebih disukai dalam pengembangan aplikasi web dibandiing XML karena penulisan JSON yang jauh lebih pendek dan simple karena hanya menggunakan tanda kurung dan titik dua. Selain itu, ukuran filenya lebih kecil sehingga proses pengiriman data di internet jauh lebih cepat. JSON juga mudahh dipahami oleh javascrpt
+
+3. Alur data pada fungsi `view`:
+    Awalnya, browser akan meminta data lewat alamat link tertentu, kemudian Django akan menyambungkan alamat tersebut ke fungsi view yang bertugas untuk mengambil data dari database. Setelah itu, view mengambil daftar data yang ada di database menggunakan perintah Django, data yang diambil diubah menjadi text JSON dengan proses serialisasi. Kemudian, JSON akan dikirimkan kembali ke browser
+
+    Mengapa kita perlu melakukan proses serialization pada model Django:
+        proses serialization diperlukan karena data yang diambil dari database masih berbentuk object bawaan Python yang tersimpan di memori komputer server.Object Python ini tidak dapat dikirimkan lewat jaringan internet ke browser, oleh sebab itu kita perlu serialisasi untuk menerjemahkan aobjek  Python tersebut menjadi text standarberupa_JSON.
+
+
+## Penggunaan AI
+
+Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas 3 ini. Saya menggunakan AI untuk:
+
+Prompting:
+- memberikan potongan kode
+- memperbaiki bug yang ada di dalam CSS
+- membantu dalam membuat `tests.py`
+
+
+Keterbatasan AI:
+- Menganggap atribut yang tidak adamenjadi ada
+- Karena yang ditanyakan hanyapotongan kode, AI memberikan banyak solusi yang tidak sesuai dengan codenya, hal ini menyebabkan test gagal
+
+perbaikan yang saya lakukan:
+- memperbaiki typo yang ada pada pada code
+- tidak menyalin, tetapi memahami apa maksud AI dan menyesuaikannya pada code.
