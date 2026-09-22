@@ -96,6 +96,7 @@ def create_experience(request):
     context = {
         'form': form,
         'brand': "Laven",
+        'name':"Ria Lavenia Kharissa"
 
     }
     return render(request, "create_experience.html", context)
@@ -106,7 +107,7 @@ def edit_experience(request, id):
     if form.is_valid() and request.method == "POST":
         form.save()
         return redirect('main:show_experience')
-    context = {'form': form, 'experience': experience}
+    context = {'form': form, 'experience': experience, 'name': 'Ria Lavenia Kharissa'}
     return render(request, "edit_experience.html", context)
 
 def delete_experience(request, id):
