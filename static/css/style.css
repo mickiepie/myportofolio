@@ -666,6 +666,8 @@ h1 {
     font-weight: 500;
     text-decoration: none;
     transition: all 0.3s ease;
+    margin: 0.5rem;
+    text-align: center;
 }
 
 .form-style{
@@ -687,8 +689,9 @@ h1 {
 .button-secondary {
     background: var(--accent-red);
     color: var(--text-main);
-    margin: 0 1rem;
+    margin: 0.5rem;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 .button-secondary:hover{
