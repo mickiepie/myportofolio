@@ -9,7 +9,7 @@
     <main>
         <section class="experience-section container" id="experience">
             <div class="experience-header">
-                <h1 class="page-title">Experience</h1>
+                <h1 class="page-title" style="margin-bottom: 1.5rem;">Experience</h1>
             </div>
 
             <div class="project-toolbar">
@@ -59,8 +59,8 @@
 
                     <!-- deskripsi pengalaman -->
                     <div class="experience-card-body">
-                        <h2 class="experience-title">{{ experience.title }} -
-                            {{experience.role}}
+                        <h2 class="experience-title">
+                            {{ experience.title }}{% if experience.role %} - {{ experience.role }}{% endif %}
                         </h2>
                         <p class="experience-description">
                             {{experience.description}}

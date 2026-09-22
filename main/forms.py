@@ -88,7 +88,7 @@ class ExperienceForm(ModelForm):
             "category": Select(),
             "description": Textarea(
                 attrs={
-                    "placeholder": "Ceritakan peran dan pencapaianmu...", 
+                    "placeholder": "Deskripsi pengalaman...", 
                     "rows": 3
                 }
             ),
