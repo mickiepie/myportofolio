@@ -15,11 +15,19 @@ Kelas : PBP A
 
 ## Penggunaan AI
 
-Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas ini. Saya menggunakan AI untuk:
+Saya menggunakan bantuan AI(Gemini) dalam mengerjakan tugas ini. Saya menggunakan AI untuk:
 
 - Merancang hamburger menu interaktif menggunakan checkbox
 - Menambahkan efek gradasi warna bergerak(animated gradient) pada latar belakang foto profil
 - Memahami fungsi horizontal scrolling pada section Experience menggunakan properti CSS seperti `overflow-x` `scroll-snap`, dan kustomisasi tampilan scrollbar dengan `::-webkit-scrollbar` agar kartu pengalamannya dapat bergeser dan estetik.
+
+### Strategi Prompting & Contoh Chatlog
+- **strategi Prompting:**
+    1. Menjelaskan struktur HTML yang sudah ada agar solusi CSS yang diberikan tidak merusak tata letak lainnya.
+    2. Memberikan batasan seperti *"cukup gunakan CSS tanpa JavaScript"*
+- **Contoh ChatLog:**
+    >**User:** "kalo layarnya mengecil navbarnya kepotong gini ya, gimana caranya biar ga kepotong ya? bisa pake menu hamburger ga"
+    > **AI:** "Navbar kepotong saat layar mengecil karena menu navigasi dibungkus dengan lebar tetap. Kita bisa mengimplementasikan pure CSS hamburger menu menggunakan teknik `<input type="checkbox" id="nav-toggle">` dan pseudoclass `:checked` pada media query `@media (max-width: 768px)`..."
 
 ## Tugas 2
 
@@ -41,11 +49,65 @@ Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas ini. Saya menggunakan
 
 ## Penggunaan AI
 
-Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas 2 ini. Saya menggunakan AI untuk:
+Saya menggunakan bantuan AI(Gemini) dalam mengerjakan tugas 2 ini. Saya menggunakan AI untuk:
 
-- Membantu merancang sttruktur model `Project` serta menanganipenambahan field baru
-- Menyusun skenario pengujian pada `test,py`
+- Membantu merancang struktur model `Project` serta menangani penambahan field baru
+- Menyusun skenario pengujian pada `test.py`
 - memahami alur request response Django dan membedah konsep dasar untuk menjawab pertanyaan reflektif no 1 pada tugas 2
+
+### Strategi Prompting & Contoh Chatlog
+- **strategi Prompting:**
+    1. Menginstruksikan AI berperan sebagai pengajar Django untuk menjelaskan alur MVC/MVT langkah demi langkah dari URL ke View hingga Template.
+    2. Meminta AI untuk menyusun skenario untuk pengujian di `test.py`
+    3. Meminta rekomendasi AI terkait penentuan fields yang dibutuhkan pada model `Project` dan panduan implementasinya di Django.
+- **Contoh Chatlog:**
+
+  > **User:** "Aku mau bikin fitur portofolio proyek di Django. kira-kira model Project butuh field apa saja ya? Terus gimana cara hubungin ke models.py?"
+  >
+  > **AI:** "Untuk entitas portofolio proyek, kamu bisa menggunakan struktur field berikut di `main/models.py`:
+  > ```python
+  > from django.db import models
+  > 
+  > class Project(models.Model):
+  >     title = models.CharField(max_length=200)
+  >     description = models.TextField()
+  >     tech_stack = models.CharField(max_length=255)
+  >     link = models.URLField(blank=True, null=True)
+  >     thumbnail = models.URLField(blank=True, null=True)
+  > ```
+  > Setelah mendefinisikan modelnya, buat berkas migrasi dan terapkan ke database SQLite dengan perintah:
+  > ```bash
+  > python manage.py makemigrations
+  > python manage.py migrate
+  > ```"
+
+  > **User:** "Gimana cara bikin unit test di `tests.py`? Aku  mau pastiin semua code yang udah aku bikin bener semua."
+  >
+  > **AI:** "Gunakan kelas `TestCase` bawaan Django:
+  > ```python
+  > from django.test import TestCase, Client
+  > from django.urls import reverse
+  > from main.models import Project
+  > 
+  > class ProjectTest(TestCase):
+  >     def setUp(self):
+  >         self.client = Client()
+  >         self.project = Project.objects.create(
+  >             title='Web Portfolio',
+  >             description='Proyek portofolio Django',
+  >             tech_stack='Django, HTML, CSS'
+  >         )
+  > 
+  >     def test_project_page_status_and_template(self):
+  >         response = self.client.get(reverse('main:show_projects'))
+  >         self.assertEqual(response.status_code, 200)
+  >         self.assertTemplateUsed(response, 'project.html')
+  > ```"
+
+  > **User:** "Jelaskan step-by-step dengan bahasa yang sederhana gimana request pengguna dari browser diproses hingga menampilkan halaman template pada Django."
+  >
+  > **AI:** "Alurnya melalui siklus Request-Response MVT: Browser Request -> urls.py (URL Dispatcher) -> views.py (Handler Logic) -> models.py (Query Database ORM) -> Template Rendering (DTL) -> HTTP Response kembali ke browser."
+    
 
 ### Tugas 3
 
@@ -73,11 +135,41 @@ Prompting:
 - memperbaiki bug yang ada di dalam CSS
 - membantu dalam membuat `tests.py`
 
-
 Keterbatasan AI:
-- Menganggap atribut yang tidak adamenjadi ada
+- Menganggap atribut yang tidak ada menjadi ada
 - Karena yang ditanyakan hanyapotongan kode, AI memberikan banyak solusi yang tidak sesuai dengan codenya, hal ini menyebabkan test gagal
 
 perbaikan yang saya lakukan:
 - memperbaiki typo yang ada pada pada code
 - tidak menyalin, tetapi memahami apa maksud AI dan menyesuaikannya pada code.
+
+### Strategi Prompting & Contoh Chatlog
+- **Strategi Prompting:**
+    1. mengirim pesan eror dari terminal ketika terjadi error
+    2. Meminta AI untuk menyusun skenario untuk pengujian di `test.py`
+- **Contoh Chatlog:**
+  > **User:** "pas aku edit malah kaya gini: Forbidden (403) CSRF verification failed. Reason given for failure: Origin checking failed - https://... does not match any trusted origins."
+  >
+  > **AI:** "Error tersebut terjadi karena Django memverifikasi domain pengirim POST request. Pada platform PWS dengan protokol HTTPS, kamu perlu mendaftarkan domain tersebut ke `CSRF_TRUSTED_ORIGINS` di dalam `settings.py`..."
+  >
+  > **User:** "aku pake gambar di drive btw, kenapa broken image?"
+  >
+  > **AI:** "Link Google Drive format web preview diblokir oleh browser untuk hotlinking tag `<img>`. Ubah URL dari format `/file/d/FILE_ID/view` menjadi direct link `https://drive.google.com/thumbnail?id=FILE_ID&sz=w1000`."
+
+
+## Progress Pengerjaan & Dokumentasi Mingguan
+
+* **Minggu 1 (Tugas 1)**
+  * **Target:** Merancang struktur awal portofolio statis dengan semantic HTML5 dan CSS responsif.
+  * **Implementasi:** Menyusun tata letak halaman utama, penggunaan efek *animated gradient*, *polaroid card*, dan lainnya.
+  * **Hasil:** Halaman web berhasil menampilkan identitas dan adaptif di layar desktop maupun layar ponsel kecil.
+
+* **Minggu 2 (Tugas 2)**
+  * **Target:** Implementasi Model-View-Template (MVT) pada Django.
+  * **Implementasi:** Mengatur *routing* URL dan *views*, mendefinisikan skema model `Project`, menjalankan `makemigrations` dan `migrate`, serta menyusun `tests.py`.
+  * **Hasil:** Halaman *Projects* dapat bekerja dengan baik dan seluruh *test case* berhasil lulus.
+
+* **Minggu 3 (Tugas 3)**
+  * **Target:** Menerapkan mekanisme form & data delivery
+  * **Implementasi:** Membuat formulir berbasis `ModelForm` dengan proteksi `{% csrf_token %}`, menyusun alur penambahan dan pengeditan data proyek/pengalaman.
+  * **Hasil:** Fitur formulir CRUD berjalan lancar di lingkungan lokal maupun server PWS.

@@ -20,9 +20,11 @@
                     <button type="submit" class="project-button">Cari</button>
                 </form>
                 
-                <a href="{% url 'main:create_project' %}" class="project-button">
-                    Tambah Proyek
-                </a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'main:create_project' %}" class="project-button">
+                        Tambah Proyek
+                    </a>
+                {% endif %}
                 
 
             </div>
@@ -34,6 +36,10 @@
                     <div class="experience-card">
                         <div class="experience-card-header">
                             <span class="experience-category">{{ project.tech_stack }}</span>
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'main:edit_project' project.id %}" class="project-button">Edit</a> 
+                            {% endif %}
                         </div>
                         
                         <div class="experience-thumbnail-wrapper">
@@ -50,13 +56,17 @@
                             <h2>{{ project.title }}</h2>
                             <p class="experience-description">{{ project.description }}</p>
                             
-                            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="margin-top: 1rem; display: flex; justify-content: flex-end; align-items: center;">
                                 {% if project.link %}
                                     <a href="{{ project.link }}" target="_blank" style="color: var(--bg-dark); font-weight: 600; text-decoration: none; font-size: 0.9rem;">View Project &rarr;</a>
                                 {% else %}
                                     <span></span>
                                 {% endif %}
-                                {% include "components/project_delete_modal.html" with project=project %}
+
+                                {% include "components/project_star.html" with project=project %}
+                                {% if user.is_superuser %}
+                                    {% include "components/project_delete_modal.html" with project=project %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>

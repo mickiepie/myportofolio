@@ -7,11 +7,11 @@
 <main>
     <section class="experience-section">
         <div class="container">
-            <h1 class="add-project-h1">Edit <span>Experience</span></h1>
+            <h1 class="add-project-h1">Edit <span>Project</span></h1>
             <div class="form-style">
 
                 <form method="POST" 
-                    action="{% url 'main:edit_experience' experience.id %}"
+                    action="{% url 'main:edit_project' project.id %}"
                     class="project-form">
                     {% csrf_token %}
                     {% for field in form %}
@@ -30,7 +30,7 @@
                     {% endfor %}
                     <div class="form-action">
                         <button type="submit" class="button">Simpan perubahan</button>
-                        <a href="{% url 'main:show_experience' %}" class="button button-secondary">Batal</a>
+                        <a href="{% url 'main:show_project' %}" class="button button-secondary">Batal</a>
     
                     </div>
                 </form>
