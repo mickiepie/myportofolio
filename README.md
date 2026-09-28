@@ -4,6 +4,29 @@ NPM : 2506543905
 
 Kelas : PBP A
 
+
+## Progress Pengerjaan & Dokumentasi Mingguan
+
+* **Minggu 1 (Tugas 1)**
+  * **Target:** Merancang struktur awal portofolio statis dengan semantic HTML5 dan CSS responsif.
+  * **Implementasi:** Menyusun tata letak halaman utama, penggunaan efek *animated gradient*, *polaroid card*, dan lainnya.
+  * **Hasil:** Halaman web berhasil menampilkan identitas dan adaptif di layar desktop maupun layar ponsel kecil.
+
+* **Minggu 2 (Tugas 2)**
+  * **Target:** Implementasi Model-View-Template (MVT) pada Django.
+  * **Implementasi:** Mengatur *routing* URL dan *views*, mendefinisikan skema model `Project`, menjalankan `makemigrations` dan `migrate`, serta menyusun `tests.py`.
+  * **Hasil:** Halaman *Projects* dapat bekerja dengan baik dan seluruh *test case* berhasil lulus.
+
+* **Minggu 3 (Tugas 3)**
+  * **Target:** Menerapkan mekanisme form & data delivery
+  * **Implementasi:** Membuat formulir berbasis `ModelForm` dengan proteksi `{% csrf_token %}`, menyusun alur penambahan dan pengeditan data proyek/pengalaman.
+  * **Hasil:** Fitur formulir CRUD berjalan lancar di lingkungan lokal maupun server PWS.
+
+  * **Minggu 4 (Tugas 4)**
+  * **Target:** Menerapkan pola autentikasi dan otorisasi dengan sistem autentikasi Django.
+  * **Implementasi:** Mengonfigurasi grup `Editor` via Django Admin dan membatasi akses fungsi menggunakan `raise PermissionDenied`. Mengimplementasikan fitur *Star* dan menyembunyikan tombol aksi pada template berdasarkan otorisasi pengguna.
+  * **Hasil:** Sistem autentikasi dan otorisasi berfungsi dengan baik, fitur interaktif *star* berjalan lancar, dan seluruh pengujian dengan  Selenium berhasil.
+
 ## Tugas 1
 
 1. Saya menggunakan elemen semantik HTML5 pada web portoffolio saya, yaitu elemen <section>, <header>, dan <footer>. Elemen ini membantu saya dalam menyusun kerangka static web saya sehingga struktur dokumen saya dapat tersusun dengan lebih terorganisir dan readable. Elemen semantik HTML5 ini juga memudahkan saya dalam melakukan styling pada CSS.
@@ -128,7 +151,7 @@ Saya menggunakan bantuan AI(Gemini) dalam mengerjakan tugas 2 ini. Saya mengguna
 
 ## Penggunaan AI
 
-Saya menggunaka bantuan AI(Gemini) dalam mengerjakan tugas 3 ini. Saya menggunakan AI untuk:
+Saya menggunakan bantuan AI(Gemini) dalam mengerjakan tugas 3 ini. Saya menggunakan AI untuk:
 
 Prompting:
 - memberikan potongan kode
@@ -157,19 +180,13 @@ perbaikan yang saya lakukan:
   > **AI:** "Link Google Drive format web preview diblokir oleh browser untuk hotlinking tag `<img>`. Ubah URL dari format `/file/d/FILE_ID/view` menjadi direct link `https://drive.google.com/thumbnail?id=FILE_ID&sz=w1000`."
 
 
-## Progress Pengerjaan & Dokumentasi Mingguan
+## Tugas 4
 
-* **Minggu 1 (Tugas 1)**
-  * **Target:** Merancang struktur awal portofolio statis dengan semantic HTML5 dan CSS responsif.
-  * **Implementasi:** Menyusun tata letak halaman utama, penggunaan efek *animated gradient*, *polaroid card*, dan lainnya.
-  * **Hasil:** Halaman web berhasil menampilkan identitas dan adaptif di layar desktop maupun layar ponsel kecil.
+Saya menggunakan bantuan AI (ChatGPT) dalam mengerjakan Tugas 4 ini untuk:
 
-* **Minggu 2 (Tugas 2)**
-  * **Target:** Implementasi Model-View-Template (MVT) pada Django.
-  * **Implementasi:** Mengatur *routing* URL dan *views*, mendefinisikan skema model `Project`, menjalankan `makemigrations` dan `migrate`, serta menyusun `tests.py`.
-  * **Hasil:** Halaman *Projects* dapat bekerja dengan baik dan seluruh *test case* berhasil lulus.
+- **Memberikan gambaran:** Membantu memahami dan menyusun logika untuk fitur otorisasi
+- **Membantu implementasi fitur `Star`:** membantu memahami implementasi fitur Star secara interaktif
+- **Membantu menyusun CSS** membantu proses styling halaman.
+Tautan Log Percakapan AI:[https://chatgpt.com/share/6ab9f920-6ed0-83ec-ba61-8a8e67886f24]
 
-* **Minggu 3 (Tugas 3)**
-  * **Target:** Menerapkan mekanisme form & data delivery
-  * **Implementasi:** Membuat formulir berbasis `ModelForm` dengan proteksi `{% csrf_token %}`, menyusun alur penambahan dan pengeditan data proyek/pengalaman.
-  * **Hasil:** Fitur formulir CRUD berjalan lancar di lingkungan lokal maupun server PWS.
+

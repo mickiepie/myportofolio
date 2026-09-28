@@ -15,31 +15,44 @@
 </head>
 <body>
     <header class="site-header">
-        <nav class="navbar container">
+    <nav class="navbar container">
+        
+        <!-- Bungkus brand dan garis pemisah pertama -->
+        <div style="display: flex; align-items: center; gap: 1rem;">
             <a href="{% url 'main:show_main' %}" class="nav-brand-capsule">{{brand}}</a>
+            <div class="nav-divider hidden-mobile"></div>
+        </div>
 
-            <!-- Hamburger untuk layar kecil -->
-            <input type="checkbox" id="nav-toggle" class="nav-toggle">
-            <label for="nav-toggle" class="hamburger-btn" aria-label="Toggle navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
+        <!-- Hamburger untuk layar kecil -->
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="hamburger-btn" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
 
-            <div class="nav-menu-capsule">
+        <div class="nav-menu-capsule">
+            <div class="nav-center">
                 <a href="{% url 'main:show_main' %}">HOME</a>
                 <a href="{% url 'main:show_experience' %}">EXPERIENCE</a>
                 <a href="{% url 'main:show_projects' %}">PROJECTS</a>
+            </div>
+            
+            <div class="nav-kanan">
+                <!-- garis panjang pemisah -->
+                <div class="nav-divider hidden-mobile"></div>
+    
                 {% if user.is_authenticated %}
                     <span class="nav-user">{{ user.username }}</span>
-                    <a href="{% url 'main:logout' %}">LOGOUT</a>
+                    <a href="{% url 'main:logout' %}" class="nav-highlight">LOGOUT</a>
                 {% else %}
                     <a href="{% url 'main:login' %}">LOGIN</a>
-                    <a href="{% url 'main:register' %}">REGISTER</a>
+                    <a href="{% url 'main:register' %}" class="nav-highlight">REGISTER</a>
                 {% endif %}
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
     {% block content %} {% endblock content %}
 
     <footer class="site-footer">
