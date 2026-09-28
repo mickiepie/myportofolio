@@ -36,11 +36,16 @@ def show_experience(request):
     experiences = Experience.objects.all()
     if title_query:
         experiences=experiences.filter(title__icontains=title_query)
+
+    is_editor = False
+    if request.user.is_authenticated:
+        is_editor = request.user.groups.filter(name='Editor').exists()
     context = {
         "name": "Ria Lavenia Kharissa",
         "experience_list": experiences,
         "brand": "Laven",
         "title_query": title_query,
+        'is_editor': is_editor,
     }
     return render(request, "experience.html", context)
 
@@ -53,16 +58,21 @@ def show_projects(request):
     )
     projects = [project.object for project in projects]
     title_query = request.GET.get("title", "").strip()
+
+    is_editor = False
+    if request.user.is_authenticated:
+        is_editor = request.user.groups.filter(name='Editor').exists()
     context = {
         'name': 'Ria Lavenia Kharissa',
         'brand': 'Laven',
         'project_list': projects,
         'title_query': title_query,
+        'is_editor': is_editor,
     }
 
     return render(request, 'projects.html', context)
 
-
+# hanya superuser
 @login_required(login_url="/login/")  # memeriksa request.user sebelum isi fungsi dijalankan
 def create_project(request):
     if not request.user.is_superuser:
@@ -88,9 +98,10 @@ def get_projects_json(request):
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
+    projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True, fields=("title", "description", "thumbnail", "tech_stack", "link", "starred_by"))
     return HttpResponse(projects_json, content_type="application/json")
 
+# hanya superuser
 @login_required(login_url="/login/")  
 def delete_project(request, project_id):
     if not request.user.is_superuser:
@@ -104,6 +115,7 @@ def delete_project(request, project_id):
 
     return redirect("main:show_projects")
 
+# hanya superuser
 @login_required(login_url="/login/") 
 def create_experience(request):
     if not request.user.is_superuser:
@@ -120,9 +132,11 @@ def create_experience(request):
     }
     return render(request, "create_experience.html", context)
 
+# boleh superuser dan editor
 @login_required(login_url="/login/") 
 def edit_experience(request, id):
-    if not request.user.is_superuser:
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
         raise PermissionDenied
     experience= get_object_or_404(Experience, pk=id)
     form=ExperienceForm(request.POST or None, instance=experience)
@@ -132,9 +146,11 @@ def edit_experience(request, id):
     context = {'form': form, 'experience': experience, 'name': 'Ria Lavenia Kharissa'}
     return render(request, "edit_experience.html", context)
 
+# boleh superuser dan editor
 @login_required(login_url="/login/") 
 def edit_project(request, id):
-    if not request.user.is_superuser:
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
         raise PermissionDenied
     project= get_object_or_404(Project, pk=id)
     form=ProjectForm(request.POST or None, instance=project)
@@ -144,6 +160,7 @@ def edit_project(request, id):
     context = {'form': form, 'project': project, 'name': 'Ria Lavenia Kharissa'}
     return render(request, "edit_project.html", context)
 
+# hanya superuser
 @login_required(login_url="/login/") 
 def delete_experience(request, id):
     if not request.user.is_superuser:
@@ -185,6 +202,7 @@ def register(request):
     context = {
         "name": "Ria Lavenia Kharissa",
         "form": form,
+        "brand": "Laven",
     }
     return render(request, "register.html", context)   
 
@@ -201,6 +219,7 @@ def login_user(request):
     context = {
         "name": "Ria Lavenia Kharissa",
         "form": form,
+        "brand": "Laven"
     }
     return render(request, "login.html", context)
 
