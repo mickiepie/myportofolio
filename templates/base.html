@@ -60,5 +60,18 @@
             <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
+    {% include 'components/toast.html' %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="django-message" data-tag="{{ message.tags }}" hidden>{{ message }}</div>
+    {% endfor %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".django-message").forEach(function (el) {
+                showToast("Notifikasi Sistem", el.textContent, el.dataset.tag || "success");
+            });
+        });
+    </script>
+{% endif %}
 </body>
 </html>
