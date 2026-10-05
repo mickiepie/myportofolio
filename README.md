@@ -27,6 +27,11 @@ Kelas : PBP A
   * **Implementasi:** Mengonfigurasi grup `Editor` via Django Admin dan membatasi akses fungsi menggunakan `raise PermissionDenied`. Mengimplementasikan fitur *Star* dan menyembunyikan tombol aksi pada template berdasarkan otorisasi pengguna.
   * **Hasil:** Sistem autentikasi dan otorisasi berfungsi dengan baik, fitur interaktif *star* berjalan lancar, dan seluruh pengujian dengan  Selenium berhasil.
 
+  * **Minggu 5 (Tugas 5)**
+  * **Target:** Memahami fungsi JavaScript pada front-end development, menggunakan JavaScript secara dasar, dan menerapkan AJAX dan Fetch API dengan aman.
+  * **Implementasi:** Menerapkan AJAX menggunakan Fetch API untuk memuat data *Project* dan *Experience* secara asinkron tanpa me-*reload* halaman, mengganti perulangan template Django dengan perakitan elemen DOM via JavaScript, serta menyertakan mekanisme perlindungan XSS dan keamanan CSRF pada permintaan.
+  * **Hasil:** seluruh fitur interaktif AJAX berfungsi lancar dengan notifikasi (*toast*) keberhasilan atau kegagalan yang tepat sasaran.
+
 ## Tugas 1
 
 1. Saya menggunakan elemen semantik HTML5 pada web portoffolio saya, yaitu elemen <section>, <header>, dan <footer>. Elemen ini membantu saya dalam menyusun kerangka static web saya sehingga struktur dokumen saya dapat tersusun dengan lebih terorganisir dan readable. Elemen semantik HTML5 ini juga memudahkan saya dalam melakukan styling pada CSS.
@@ -188,5 +193,35 @@ Saya menggunakan bantuan AI (ChatGPT) dalam mengerjakan Tugas 4 ini untuk:
 - **Membantu implementasi fitur `Star`:** membantu memahami implementasi fitur Star secara interaktif
 - **Membantu menyusun CSS** membantu proses styling halaman.
 Tautan Log Percakapan AI:[https://chatgpt.com/share/6ab9f920-6ed0-83ec-ba61-8a8e67886f24]
+
+
+## Tugas 5
+
+1. **Debouncing** adalah teknik untuk menunda sebuah fungsi hingga suatu jeda waktu berlalu tanpa event baru. Selama pengguna masih mengetik, timer sebelumnya dibatalkan dan dimulai lagi. Jadi, browser hanya mengirim permintaan setelah pengguna berhenti mengetik selama sejenak. Pada fitur pencarian, teknik ini penting karena mencegah browser mengirimkan permintaan ke server secara beruntun setiap ketikan. Teknik ini jugaa membuat permintaan pada fitur pencarian hanya akan dikirim ketika pengguna berhenti mengetik sehingga dapat mengurangi beban server, menghemat *bandwidth*, dan mencegah terjadinya bentrokan respons di mana data hasil pencarian dari ketikan awal datang terlambat dan menimpa hasil dari ketikan baru.
+
+2. Penggunaan `await` bersama dengan `fetch()` berfungsi untuk menjeda eksekusi baris kode JavaScript selanjutnya hingga proses pengambilan data asinkron dari server (berupa *Promise*) selesai diproses dan mengembalikan hasilnya. Jika kita tidak menggunakan `await`, maka kode JavaScript di bawahnya akan langsung dieksekusi tanpa menunggu proses `fetch()` selesai. Akibatnya, variabel penampung hasil `fetch()` tersebut yang hanya berisi objek *Promise* yang berstatus *pending* (menunggu), sehingga data tidak bisa ditampilkan atau akan menyebabkan *error* saat diproses lebih lanjut.
+
+3. **Cross-Site Scripting (XSS)** adalah serangan ketika penyerang berhasil menyisipkan kode JavaScript miliknya ke dalam halaman web yang kemudian dijalankan di browser pengguna lain. Salah satu jenisnya adalah stored XSS, yaitu ketika kode berbahaya disimpan ke database (misalnya sebagai judul proyek) lalu ikut dijalankan setiap kali data tersebut ditampilkan. Data yang dimuat melalui AJAX/JavaScript lebih rentan terhadap serangan ini karena pengembang sering kali menyisipkan data JSON mentah langsung ke dalam *DOM* menggunakan properti seperti `innerHTML`. Jika pengembang lupa membuat fungsi *escaping* manual di JavaScript, skrip berbahaya tersebut akan langsung dieksekusi oleh browser. Sebaliknya, *template* bawaan Django jauh lebih aman karena memiliki fitur *auto-escaping* aktif yang otomatis menetralisir semua karakter HTML berbahaya sebelum halaman dikirim ke pengguna.
+
+## Penggunaan AI
+
+Saya menggunakan bantuan AI (ChatGPT) dalam mengerjakan Tugas 5 ini untuk:
+
+- **Membantu implementasi fitur Edit (AJAX):** Membantu merancang "Modal Recycling" sehingga modal yang dipakai untuk menambah data (Create) bisa dipakai juga untuk mengubah data (Update), tanpa perlu memuat ulang halaman (*reload*).
+- **Memberikan gambaran dan *debugging*:** membantu menyesuaikan format tanggal menjadi `YYYY-MM-DD` menggunakan metode `.substring(0, 10)` agar kalender pada form modal Edit terisi otomatis, kemudian membantu mengatasi tombol edit yang tidak dapat berfungsi
+- **Memahami konsep teoretis:** Membantu membedah konsep dasar *debouncing*, *asynchronous programming* (`await`), dan keamanan XSS untuk menjawab pertanyaan reflektif.
+
+Tautan Log Percakapan AI: 
+[https://chatgpt.com/share/6ac1e34a-6c00-83ec-a295-97f5cecfb9de] 
+[https://chatgpt.com/share/6ac1e359-5970-83ec-bc6c-79243f63d713]
+
+### Strategi Prompting & Contoh Chatlog
+- **Strategi Prompting:**
+  1. Memberikan potongan kode HTML dan `views.py` yang sudah ada, lalu menginstruksikan AI untuk menyesuaikan fitur Edit agar berjalan menggunakan metode AJAX yang sama persis dengan fitur Create.
+
+### Keterbatasan AI & Perbaikan Manual
+Meskipun AI sangat membantu, ada beberapa keterbatasan yang saya temukan selama pengerjaan:
+- **Keterbatasan AI (Kurang Konteks):** AI terkadang memberikan solusi yang kurang tepat karena tidak bisa melihat keseluruhan file proyek saya.
+- **Perbaikan Manual:** Saya tidak menyalin kode AI mentah-mentah. Saya menelusuri sendiri apa yang salah dan mengubahnya. Selain itu, saya mengerjakan tugas ini dengan melihat tutorial 5 dan juga mencari referensi tambahan dari internet seperti W3Schools dan GeeksforGeeks untuk membantu saya memperbaiki *bug* dan memahami kode dengan lebih baik secara mandiri.
 
 
