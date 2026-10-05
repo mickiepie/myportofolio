@@ -34,19 +34,16 @@ def show_main(request):
 
 def show_experience(request):
     title_query = request.GET.get("title", "").strip()
-    experiences = Experience.objects.all()
-    if title_query:
-        experiences=experiences.filter(title__icontains=title_query)
-
     is_editor = False
     if request.user.is_authenticated:
         is_editor = request.user.groups.filter(name='Editor').exists()
+
     context = {
         "name": "Ria Lavenia Kharissa",
-        "experience_list": experiences,
         "brand": "Laven",
         "title_query": title_query,
-        'is_editor': is_editor,
+        "is_editor": is_editor,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
@@ -191,8 +188,19 @@ def delete_experience(request, id):
     return redirect('main:show_experience')
 
 def get_experience_json(request):
+    title_query = request.GET.get("title", "").strip()
     experiences = Experience.objects.all()
-    experience_json= serializers.serialize("json", experiences, use_natural_foreign_keys=True)
+
+    #debouncing Tasks
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
+
+    #serialisasi semua field
+    experience_json = serializers.serialize(
+        "json", 
+        experiences, 
+        use_natural_foreign_keys=True
+    )
     return HttpResponse(experience_json, content_type="application/json")
 
 def show_experience_json_deserialized(request):
@@ -279,4 +287,56 @@ def create_project_ajax(request):
             status=201,
         )
 
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Pengalaman berhasil ditambahkan.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def edit_experience_ajax(request, id):
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+        return JsonResponse(
+                    {"message": "Hanya pemilik portofolio atau Editor yang dapat mengedit pengalaman."},
+                    status=403,
+                )
+    
+    experience = get_object_or_404(Experience, pk=id)
+    form = ExperienceForm(request.POST, instance=experience)
+    
+    if form.is_valid():
+        form.save()
+        return JsonResponse({"message": "Pengalaman berhasil diperbarui."})
+    
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def edit_project_ajax(request, id):
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+        return JsonResponse(
+                    {"message": "Hanya pemilik portofolio atau Editor yang dapat mengedit proyek."},
+                    status=403,
+                )
+    
+    project = get_object_or_404(Project, pk=id)
+    form = ProjectForm(request.POST, instance=project)
+    
+    if form.is_valid():
+        form.save()
+        return JsonResponse({"message": "Proyek berhasil diperbarui."})
+    
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

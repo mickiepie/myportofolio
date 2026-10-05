@@ -24,7 +24,7 @@
                 {% if user.is_superuser %}
                     <button type="button"
                             class="button project-add-button"
-                            popovertarget="add-project-modal">
+                            onclick="openProjectModal()">
                         <span aria-hidden="true">+</span>
                         Tambah Proyek
                     </button>
@@ -68,6 +68,7 @@
     const CURRENT_USER_ID = parseInt("{{ user.id|default:'0' }}");
     const CSRF_TOKEN = "{{ csrf_token }}"; 
     let projectsAbortController;
+    let globalProjectsData = [];
 
     // Elemen DOM
     const loadingState = document.getElementById('loading');
@@ -133,15 +134,16 @@
             : `<div class="experience-thumbnail-placeholder"><span>${project.title}</span></div>`;
 
         // 2. Tombol Edit
-        const editUrl = "{% url 'main:edit_project' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
-        const editHtml = (IS_SUPERUSER || IS_EDITOR) ? `<a href="${editUrl}" class="project-button" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">Edit</a>` : '';
+        const editHtml = (IS_SUPERUSER || IS_EDITOR) 
+            ? `<button type="button" class="project-button btn-edit" onclick="openProjectModal('${projectId}')" >Edit</button>` 
+            : '';
 
         // 3. Tombol Hapus 
         const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
         const deleteHtml = IS_SUPERUSER
             ? `<form method="post" action="${deleteUrl}" style="margin: 0;">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${CSRF_TOKEN}">
-                <button type="submit" class="project-button" style="background-color: #dc3545; color: white; padding: 0.35rem 0.65rem;" onclick="return confirm('Yakin ingin menghapus project ini?');">Hapus</button>
+                <button type="submit" class="project-button btn-delete" onclick="return confirm('Yakin ingin menghapus project ini?');">Hapus</button>
                 </form>`
             : '';
 
@@ -159,11 +161,12 @@
         const extra = item.extra || {};
         const isStarred = extra.is_starred === true;
         const starCount = extra.star_count || 0;
-        const starIcon = isStarred ? "★ Unstar" : "☆ Star"; 
+        const starIcon = isStarred ? "★" : "☆"; 
         const isStarredStyle = isStarred ? "background-color: var(--accent-pink); color: var(--bg-dark);" : "background-color: #ffffff; color: var(--bg-dark);";
         
         const starHtml = `
             <button type="button" 
+                    class="project-button"
                     onclick="toggleStarAjax('${projectId}')"
                     title="Star Project"
                     style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 50px; border: 1px solid var(--bg-dark); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; transition: all 0.2s ease; ${isStarredStyle}">
@@ -220,6 +223,7 @@
             if (!response.ok) throw new Error('Failed to fetch data');
 
             const projectData = await response.json();
+            globalProjectsData = projectData;
 
             if (projectData.length === 0) {
                 displayPageSection({ showEmpty: true });
@@ -260,10 +264,34 @@
     }
 
 
-        const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
     const projectForm = document.getElementById('project-form');
 
-    // Membaca nilai cookie, digunakan untuk mengambil token CSRF
+    function openProjectModal(id = null) {
+        const modal = document.getElementById('add-project-modal');
+        const titleText = modal.querySelector('h2');
+        
+        if (id) {
+            // edit
+            titleText.innerHTML = 'Edit <span>Project</span>';
+            projectForm.action = `/projects/edit-ajax/${id}/`; // Arahkan ke URL Edit
+            
+            const proj = globalProjectsData.find(item => item.pk === id).fields;
+            document.getElementById('id_title').value = proj.title;
+            document.getElementById('id_description').value = proj.description;
+            document.getElementById('id_tech_stack').value = proj.tech_stack;
+            document.getElementById('id_link').value = proj.link || '';
+            document.getElementById('id_thumbnail').value = proj.thumbnail || '';
+        } else {
+            // tambah project
+            titleText.innerHTML = 'Tambah <span>Project</span>';
+            projectForm.action = "{% url 'main:create_project_ajax' %}";
+            projectForm.reset();
+        }
+        
+        modal.showPopover();
+    }
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -279,15 +307,14 @@
         return cookieValue;
     }
 
-    // Mengirim data form ke server
+    
     async function addProject(event) {
         event.preventDefault();
-
         const submitButton = projectForm.querySelector('button[type="submit"]');
         submitButton.disabled = true;
 
         try {
-            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+            const response = await fetch(projectForm.action, { 
                 method: 'POST',
                 headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 body: new FormData(projectForm),
@@ -297,17 +324,16 @@
             if (response.ok) {
                 projectForm.reset();
                 closeProjectModal();
-                showToast('Berhasil', 'Proyek baru berhasil ditambahkan!', 'success');
+                showToast('Berhasil', result.message || 'Proyek berhasil disimpan!', 'success');
                 fetchProjects(searchInput.value.trim());
             } else {
                 const errorMessages = result.errors
-                    ? Object.values(result.errors).flat().map(error => error.message)
-                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                showToast('Gagal menambahkan proyek', errorMessages.join(' '), 'error');
+                    ? Object.values(result.errors).flat().map(e => e.message).join(' ')
+                    : (result.message || `Terjadi kesalahan (status ${response.status}).`);
+                showToast('Gagal', errorMessages, 'error');
             }
         } catch (error) {
-            console.error('Error adding project:', error);
-            showToast('Gagal menambahkan proyek', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+            showToast('Gagal', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
         } finally {
             submitButton.disabled = false;
         }

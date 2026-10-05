@@ -9,7 +9,10 @@
     --text-main: #f3f3f3;       
     --text-muted: #d1c4c9;      
     --accent-pink: #ffe0eb;   
-    --accent-red: #bb080b;      
+    --accent-red: #bb080b;   
+    --paper: #ffffff;      
+    --line: #cccccc;       
+    --radius: 10px;   
 }
 
 body {
@@ -614,8 +617,7 @@ h1 {
 .project-search-input{
     flex: 1;
     padding: 0 1rem;
-    border: 1px solid var(--ink, #2a0c1b);
-    border-right: none;
+    border: 1px solid var(--bg-dark);
     font-size: 1rem;
     background: transparent;
 }
@@ -623,19 +625,48 @@ h1 {
 .project-button{
     display: inline-flex;
     text-decoration: none;
-    padding: 0 1rem;
+    padding: 1rem 1.5rem;
     background-color: var(--bg-dark);
     color: #ffffff;
-    border: 1px solid var(--ink, #000000);
+    border: 1px solid var(--bg-dark);
     font-weight: 500;
     transition: all 0.2s ease;
     text-align: center;
     justify-content: center;
     align-items: center;
+    
 
 }
 
-.project-button:hover{
+.btn-delete {
+    background-color: var(--accent-red);
+    border-color: var(--bg-dark);
+    color: #ffffff;
+    padding: 0.35rem 0.65rem; 
+    border-radius: 50px;
+}
+
+.btn-delete:hover {
+    background-color: #620506; 
+    color: #ffffff;
+}
+
+.btn-edit {
+    padding: 0.2rem 0.8rem;
+    font-size: 0.8rem;
+    background-color: transparent;
+    color: var(--bg-dark);
+    border: 1px solid var(--bg-dark);
+    border-radius: 50px;
+}
+
+.btn-edit:hover {
+    background-color: var(--bg-dark);
+    color: #ffffff;
+}
+
+
+.project-button.button-danger:hover{
     background-color: var(--accent-pink);
     color: #000000;
 }
@@ -647,6 +678,20 @@ h1 {
     max-width: 100%;
     margin-top: 1.5rem;
     gap: 1.8rem;
+}
+
+.register-btn{
+    display: inline-flex;
+    text-decoration: none;
+    padding: 1rem 1.5rem;
+    background-color: var(--bg-dark);
+    color: #ffffff;
+    border: 1px solid var(--bg-dark);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .add-project-h1 {
@@ -786,7 +831,6 @@ h1 {
     display: inline-block;
     height: fit-content;
     border: 0;
-    border-radius: var(--radius);
     padding: 0.55rem 1rem;
     background: var(--bg-dark);
     color: var(--text-main);
@@ -1159,7 +1203,7 @@ h1 {
     margin: 0;
     padding: 1rem;
     border: 0;
-    background: transparent;
+    background: var(--paper);
     z-index: 10;
     align-items: center;
     justify-content: center;
@@ -1189,8 +1233,13 @@ h1 {
     padding: 1.5rem;
     background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 16px;
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+    scrollbar-width: none; 
+}
+
+.project-form-modal__content::-webkit-scrollbar {
+    display:none;
 }
 
 .project-form-modal__content h2 {
