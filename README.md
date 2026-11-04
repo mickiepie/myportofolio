@@ -4,6 +4,46 @@ NPM : 2506543905
 
 Kelas : PBP A
 
+## Akses Website
+
+Aplikasi portofolio ini telah dideploy dan dapat diakses melalui Platform Web Service (PWS) Fasilkom UI:
+
+[Buka website portofolio Ria Lavenia Kharissa](https://ria-lavenia-myportofolio.pws.cs.ui.ac.id/)
+
+## Setup dan Menjalankan Project
+
+Pastikan Python sudah terpasang, lalu jalankan perintah berikut dari direktori project:
+
+1. Buat dan aktifkan virtual environment:
+
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
+   ```
+
+   Untuk macOS/Linux, gunakan `source .venv/bin/activate` setelah membuat virtual environment.
+
+2. Pasang dependensi:
+
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
+
+3. Siapkan database lokal dan buat akun admin:
+
+   ```bash
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
+
+4. Jalankan server development:
+
+   ```bash
+   python manage.py runserver
+   ```
+
+   Buka [http://127.0.0.1:8000/](http://127.0.0.1:8000/) di browser. Konfigurasi lokal menggunakan SQLite. Kredensial database deployment tidak diperlukan untuk menjalankan project secara lokal.
+
 
 ## Progress Pengerjaan & Dokumentasi Mingguan
 
