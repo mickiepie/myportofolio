@@ -1,10 +1,11 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from datetime import date
 from main.models import Experience, Project
 from main.forms import ExperienceForm
 import json
+from django.contrib.auth.models import User
 
 
 class MainTest(TestCase):
@@ -38,16 +39,24 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Committee")
+        
+        self.assertContains(response, reverse("main:get_experience_json"))
+        json_response = self.client.get(reverse("main:get_experience_json"))
+        self.assertEqual(json_response.status_code, 200)
+        data = json.loads(json_response.content)
+        self.assertEqual(data[0]["fields"]["title"], self.experience.title)
+        self.assertEqual(data[0]["fields"]["description"], self.experience.description)
+        self.assertEqual(data[0]["fields"]["category"], "committee")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
 
-        self.assertContains(response, "No experience has been added yet.")
+
+        self.assertContains(response, "Belum ada pengalaman yang ditambahkan atau ditemukan.")
+        json_response = self.client.get(reverse("main:get_experience_json"))
+        self.assertEqual(json.loads(json_response.content), [])
 
     def test_completed_experience(self):
         self.experience.ended_at = timezone.now()
@@ -58,9 +67,10 @@ class MainTest(TestCase):
 class ProjectTest(TestCase):
     def setUp(self):
         self.project = Project.objects.create(
+            title="My Portfolio Website",
             description="Developed a dynamic personal web portfolio.",
             tech_stack="Python, Django, HTML, CSS",
-            link="https://github.com/rialavenia/myportfolio"
+            link="https://github.com/example/myportfolio"
         )
 
     def test_project_url_and_template(self):
@@ -71,13 +81,20 @@ class ProjectTest(TestCase):
     def test_project_content_display(self):
         response = self.client.get(reverse("main:show_projects"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.project.title)
-        self.assertContains(response, self.project.tech_stack)
-        self.assertContains(response, self.project.description)
+        
+        self.assertContains(response, reverse("api:project-list"))
+        api_response = self.client.get(reverse("api:project-list"))
+        self.assertEqual(api_response.status_code, 200)
+        self.assertEqual(api_response.data[0]["title"], self.project.title)
+        self.assertEqual(api_response.data[0]["tech_stack"], self.project.tech_stack)
+        self.assertEqual(api_response.data[0]["description"], self.project.description)
 
 class ExperienceTest(TestCase):
     def setUp(self):
-            self.client=Client()
+            self.owner = User.objects.create_superuser(
+                username="experience-owner", password="test-password", email="owner@example.com"
+            )
+            self.client.force_login(self.owner)
             self.experience = Experience.objects.create(
                 title="Open House Fasilkom UI",
                 description="Served as Master of Ceremony and faculty representative in school visitation programs, delivering presentations and engaging prospective students to promote Fakultas Ilmu Komputer Universitas Indonesia.",
@@ -92,7 +109,10 @@ class ExperienceTest(TestCase):
         response=self.client.get(reverse('main:show_experience'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'experience.html')
-        self.assertContains(response, "Public Relation Staff")
+        self.assertContains(response, reverse('main:get_experience_json'))
+        json_response = self.client.get(reverse('main:get_experience_json'))
+        data = json.loads(json_response.content)
+        self.assertEqual(data[0]['fields']['role'], "Public Relation Staff")
 
     def test_expeerience_form_validation(self):
         form_data={
@@ -149,10 +169,13 @@ class ExperienceTest(TestCase):
     def test_search_experience(self):
         response = self.client.get(reverse('main:show_experience') + '?title=Open')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Open House Fasilkom UI")
+        self.assertContains(response, 'value="Open"')
+        search_response = self.client.get(reverse('main:get_experience_json'), {'title': 'Open'})
+        search_data = json.loads(search_response.content)
+        self.assertEqual(search_data[0]['fields']['title'], "Open House Fasilkom UI")
 
-        response_empty = self.client.get(reverse('main:show_experience') + '?title=abcdef')
-        self.assertNotContains(response_empty, "Open House Fasilkom UI")
+        search_response_empty = self.client.get(reverse('main:get_experience_json'), {'title': 'abcdef'})
+        self.assertEqual(json.loads(search_response_empty.content), [])
 
     def test_get_experience_json(self):
         response = self.client.get(reverse('main:get_experience_json'))
