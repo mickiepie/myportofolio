@@ -62,15 +62,20 @@ Pastikan Python sudah terpasang, lalu jalankan perintah berikut dari direktori p
   * **Implementasi:** Membuat formulir berbasis `ModelForm` dengan proteksi `{% csrf_token %}`, menyusun alur penambahan dan pengeditan data proyek/pengalaman.
   * **Hasil:** Fitur formulir CRUD berjalan lancar di lingkungan lokal maupun server PWS.
 
-  * **Minggu 4 (Tugas 4)**
+* **Minggu 4 (Tugas 4)**
   * **Target:** Menerapkan pola autentikasi dan otorisasi dengan sistem autentikasi Django.
   * **Implementasi:** Mengonfigurasi grup `Editor` via Django Admin dan membatasi akses fungsi menggunakan `raise PermissionDenied`. Mengimplementasikan fitur *Star* dan menyembunyikan tombol aksi pada template berdasarkan otorisasi pengguna.
   * **Hasil:** Sistem autentikasi dan otorisasi berfungsi dengan baik, fitur interaktif *star* berjalan lancar, dan seluruh pengujian dengan  Selenium berhasil.
 
-  * **Minggu 5 (Tugas 5)**
+* **Minggu 5 (Tugas 5)**
   * **Target:** Memahami fungsi JavaScript pada front-end development, menggunakan JavaScript secara dasar, dan menerapkan AJAX dan Fetch API dengan aman.
   * **Implementasi:** Menerapkan AJAX menggunakan Fetch API untuk memuat data *Project* dan *Experience* secara asinkron tanpa me-*reload* halaman, mengganti perulangan template Django dengan perakitan elemen DOM via JavaScript, serta menyertakan mekanisme perlindungan XSS dan keamanan CSRF pada permintaan.
   * **Hasil:** seluruh fitur interaktif AJAX berfungsi lancar dengan notifikasi (*toast*) keberhasilan atau kegagalan yang tepat sasaran.
+
+* **Minggu 6 (Tugas 6)**
+  * **Target:** Mengonversi API manual menjadi RESTful API menggunakan Django REST Framework (DRF) dan menerapkan sistem otorisasi berbasis peran.
+  * **Implementasi:** Membuat `serializers.py` untuk serialisasi dan validasi data, menyusun *permission classes* untuk membatasi akses (publik, pengguna login, Editor, dan Superuser), membuat API view berbasis fungsi (`@api_view`) untuk operasi CRUD dan *toggle star*, serta memperbarui script AJAX di frontend untuk JSON DRF.
+  * **Hasil:** seluruh hak akses dan token CSRF terproteksi dengan aman di sisi server, serta seluruh unit test berhasil lulus.
 
 ## Tugas 1
 
@@ -265,3 +270,64 @@ Meskipun AI sangat membantu, ada beberapa keterbatasan yang saya temukan selama 
 - **Perbaikan Manual:** Saya tidak menyalin kode AI mentah-mentah. Saya menelusuri sendiri apa yang salah dan mengubahnya. Selain itu, saya mengerjakan tugas ini dengan melihat tutorial 5 dan juga mencari referensi tambahan dari internet seperti W3Schools dan GeeksforGeeks untuk membantu saya memperbaiki *bug* dan memahami kode dengan lebih baik secara mandiri.
 
 
+## Tugas 6
+
+1. **Jelaskan apa yang dimaksud dengan REST dan mengapa mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful! Jelaskan pula perbedaan PUT dan PATCH beserta contoh kapan masing-masing sebaiknya digunakan!**
+   * **REST** adalah gaya arsitektur perancangan web API yang memperlakukan data sebagai sumber daya dengan alamat URL unik. Interaksi klien dan server bersifat stateless, yaitu server tidak perlu mengingat riwayat permintaan sebelumnya dan menggunakan standar HTTP method untuk menentukan tindakan yang dilakukan.
+   * **Kenapa mengembalikan JSON saja belum tentu RESTful?** Karena format data JSON hanyalah wadah untuk bertukar data. Suatu API baru bisa dikatakan RESTful jika penataan alamat URL-nya menunjuk ke resource, menggunakan metode HTTP yang tepat (GET untuk membaca, POST untuk membuat, PUT/PATCH untuk mengubah, dan DELETE untuk menghapus), serta mengembalikan status HTTP yang sesuai (200, 201, 204, 400, 403, 404).
+   * **Perbedaan PUT dan PATCH:**
+     * `PUT`: Bersifat menggantikan seluruh data. Klien wajib mengirimkan semua field data yang diperlukan secara lengkap. Jika ada field yang tidak dikirimkan, nilainya bisa terhapus atau direset. Contoh: Saat mengedit proyek dan kita mengirim ulang seluruh form lengkap berisi judul, deskripsi, tech stack, link, dan thumbnail.
+     * `PATCH`: Digunakan untuk memperbarui sebagian data saja. Klien hanya perlu mengirim field tertentu yang ingin diubah tanpa mempengaruhi field lainnya. Contoh: Saat kita hanya ingin mengganti judul proyek saja (`{"title": "Judul Baru"}`) tanpa perlu mengirim ulang link, deskripsi, atau thumbnail yang tidak diubah.
+
+2. **Jelaskan peran serializer pada Django REST Framework! Apa keuntungannya dibandingkan merakit dictionary secara manual dengan JsonResponse seperti pada Tutorial 05?**
+   * **Peran Serializer:** Serializer bekerja dua arah:
+     1. Mengubah data kompleks Django (objek Model atau QuerySet) menjadi format data Python dasar yang siap diubah menjadi JSON (*serialization*).
+     2. Menerima dan membaca data JSON mentah dari klien, memeriksa kelengkapan serta kebenaran datanya melalui `is_valid()`, lalu menyimpannya ke database (*deserialization*).
+   * **Keuntungannya dibanding JsonResponse manual:**
+     * **Validasi Otomatis & Kuat:** Serializer langsung memvalidasi tipe data sesuai skema model dan memungkinkan kita membuat validasi khusus.
+     * **Tidak Sulit/Repot:** Kita tidak perlu lagi mengetik perulangan dan merakit *dictionary* satu per satu secara manual.
+     * **Keamanan Data Terjaga:** Kita bisa memilih secara spesifik field apa saja yang ingin ditampilkan ke publik, sehingga data akun yang sensitif (seperti password hash atau email) tidak akan bocor.
+     * **Mendukung Field Dinamis:** Memudahkan pembuatan data hasil hitungan otomatis yang bersifat *read-only* (seperti `SerializerMethodField` untuk menghitung jumlah bintang dan status star pengguna).
+
+3. **Jelaskan perbedaan autentikasi dan otorisasi pada Django REST Framework! Mengapa hak akses harus diperiksa dengan permission class di server, bukan hanya dengan menyembunyikan tombol di template?**
+   * **Autentikasi:** Proses untuk membuktikan identitas pengguna, misalnya mengenali akun pengguna melalui login dan cookie sesi.
+   * **Otorisasi:** Proses untuk menentukan hak atau wewenang yang dimiliki pengguna tersebut, misalnya mengecek apakah pengguna yang login tersebut berhak menghapus proyek atau hanya boleh melihat saja.
+   * **Alasan pemeriksaan wajib di server (permission class):** Menyembunyikan tombol Edit atau Hapus di HTML template hanyalah pengaturan tampilan visual di sisi browser (*client-side UI*). Pengguna masih dapat mencoba mengirim request HTTP secara langsung ke endpoint tertentu meskipun tombolnya tidak ditampilkan.Jika server tidak memiliki *permission class* untuk mencegatnya, request berbahaya tersebut akan tetap dieksekusi oleh database.
+
+4. **Jelaskan mengapa permintaan yang mengubah data tetap memerlukan token CSRF ketika API memakai SessionAuthentication! Mengapa test yang memakai force_authenticate tidak cukup untuk membuktikan bahwa perlindungan CSRF berjalan?**
+   * **Urgensi token CSRF:** Saat menggunakan `SessionAuthentication`, browser akan secara otomatis menempelkan cookie sesi login setiap kali mengirim permintaan ke server. Jika pengguna sedang membuka web jahat lain di saat yang sama, web jahat itu bisa saja memicu permintaan tersembunyi ke web kita (*Cross-Site Request Forgery*). Token CSRF wajib digunakan karena situs luar tidak bisa membaca token tersebut (*Same-Origin Policy*), sehingga server tahu bahwa permintaan pengubahan data benar-benar datang dari halaman web resmi kita.
+   * **Kelemahan `force_authenticate`:** Fungsi `force_authenticate` pada DRF hanyalah alat bantu saat testing untuk menempelkan objek `User` langsung ke request tanpa melalui proses login sebenarnya dan sengaja melewati pemeriksaan middleware CSRF bawaan Django. Oleh sebab itu, kita wajib menguji keamanan CSRF secara nyata menggunakan `APIClient(enforce_csrf_checks=True)` dan simulasi `.login()` agar terbukti bahwa sistem benar-benar menolak request tanpa token CSRF.
+
+## Penggunaan AI
+
+Saya menggunakan bantuan AI (ChatGpt & Gemini) dalam mengerjakan Tugas 6 ini untuk:
+
+- Membantu merancang serializer `ProjectSerializer` dan `ExperienceSerializer` agar sesuai dengan nama field model portofolio saya (`thumbnail` dan `link`).
+- Membantu memperbarui skrip AJAX di file HTML agar terhubung ke endpoint baru DRF (`/api/v1/projects/`).
+- Membantu menyusun berkas pengujian otomatis `tests_api.py` dan memperbaiki error pada `tests.py`.
+
+Tautan Log Percakapan AI: 
+[https://chatgpt.com/share/6aef4b8d-db30-83ec-b0fa-04e9b6052d3f]
+[https://chatgpt.com/share/6af08562-5c54-83ec-8358-9260ef47ffec]
+
+### Strategi Prompting & Contoh Chatlog
+- **Strategi Prompting:**
+  1. Mengirimkan berkas tutorial dan meminta AI untuk mengajari langkah per langkah.
+  2. Mengirimkan pesan error lengkap dari terminal seperti `AttributeError: 'HttpResponse' object has no attribute 'data'` dan error penolakan pengujian test case.
+
+- **Contoh Chatlog Gemini:**
+
+  > **User:** "python manage.py test main malah gagal. kayanya karna perubahan js di project.html ya"
+  >
+  > **AI:** "Perubahan JS di template bukan penyebabnya karena Django TestCase tidak menjalankan JavaScript. Error terjadi karena di `main/tests.py` kamu memanggil `api_response.data[0]['title']` pada `TestCase` bawaan Django. `TestCase` biasa menghasilkan `HttpResponse` standar yang tidak memiliki atribut `.data` (hanya ada di `APITestCase`). Ubah pemanggilannya menjadi `api_response.json()` dan pastikan field wajib `title` terisi di method `setUp`..."
+
+### Keterbatasan AI & Perbaikan Manual
+
+Meskipun AI digunakan selama pengerjaan, terdapat beberapa batasan nyata yang saya temui:
+
+- **Keterbatasan AI (Tidak Menjawab Inti & Ketergantungan Data Penuh):** 
+  Ketika saya menanyakan masalah atau *error* spesifik pada fitur tertentu, jawaban yang diberikan AI sering kali tidak langsung menjawab inti pertanyaan dan terasa berputar-putar. Selain itu, AI kerap meminta saya mengirimkan seluruh berkas proyek (*models.py*, *views.py*, *urls.py*, hingga template HTML secara utuh) agar bisa memahami masalahnya. Karena alasan batasan privasi, saya tidak bisa memberikan seluruh file proyek tersebut. Akibatnya, solusi yang diberikan AI sering kali bersifat generik, meleset dari konteks aplikasi yang sedang saya bangun.
+
+- **Perbaikan Manual oleh Pengembang:** 
+  1. Menyesuaikan sendiri nama-nama *field* model (seperti `thumbnail` dan `link`) ke dalam serializer dan skrip *fetch* AJAX tanpa menyalin mentah-mentah dari AI.
+  3. Membaca dokumentasi resmi (seperti modul tutorial dan dokumentasi Django REST Framework) untuk melengkapi bagian-bagian kode yang tidak terjawab tuntas oleh AI.
