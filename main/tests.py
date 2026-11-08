@@ -40,13 +40,12 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
         
-        self.assertContains(response, reverse("main:get_experience_json"))
-        json_response = self.client.get(reverse("main:get_experience_json"))
-        self.assertEqual(json_response.status_code, 200)
-        data = json.loads(json_response.content)
-        self.assertEqual(data[0]["fields"]["title"], self.experience.title)
-        self.assertEqual(data[0]["fields"]["description"], self.experience.description)
-        self.assertEqual(data[0]["fields"]["category"], "committee")
+        self.assertContains(response, reverse("api:experience-list"))
+        api_response = self.client.get(reverse("api:experience-list"))
+        self.assertEqual(api_response.status_code, 200)
+        self.assertEqual(api_response.data[0]["title"], self.experience.title)
+        self.assertEqual(api_response.data[0]["description"], self.experience.description)
+        self.assertEqual(api_response.data[0]["category"], "committee")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
 
     def test_empty_experience_page(self):
@@ -109,10 +108,9 @@ class ExperienceTest(TestCase):
         response=self.client.get(reverse('main:show_experience'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'experience.html')
-        self.assertContains(response, reverse('main:get_experience_json'))
-        json_response = self.client.get(reverse('main:get_experience_json'))
-        data = json.loads(json_response.content)
-        self.assertEqual(data[0]['fields']['role'], "Public Relation Staff")
+        self.assertContains(response, reverse('api:experience-list'))
+        api_response = self.client.get(reverse('api:experience-list'))
+        self.assertEqual(api_response.data[0]['role'], "Public Relation Staff")
 
     def test_expeerience_form_validation(self):
         form_data={

@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group, User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
-from main.models import Project
+from main.models import Project, Experience
 
 class ProjectAPITest(APITestCase):
     def setUp(self):
@@ -148,3 +148,113 @@ class ProjectAPITest(APITestCase):
             self.list_url, self.payload, format="json", HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+class ExperienceAPITest(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_superuser(
+            username="owner_exp", password="test-password", email="owner_exp@example.com"
+        )
+        self.visitor = User.objects.create_user(
+            username="visitor_exp", password="test-password"
+        )
+        self.editor_group, _ = Group.objects.get_or_create(name="Editor")
+        self.editor = User.objects.create_user(
+            username="editor_exp", password="test-password"
+        )
+        self.editor.groups.add(self.editor_group)
+
+        self.experience = Experience.objects.create(
+            title="Open House Fasilkom UI",
+            role="Staff",
+            description="Public Relation Staff",
+            category="committee",
+            thumbnail="",
+        )
+        self.list_url = reverse("api:experience-list")
+        self.detail_url = reverse("api:experience-detail", args=[self.experience.id])
+        self.star_url = reverse("api:experience-star", args=[self.experience.id])
+        self.payload = {
+            "title": "BEM Fasilkom UI",
+            "role": "Staff",
+            "description": "Creative Division",
+            "category": "organization",
+            "thumbnail": "",
+        }
+
+    def test_public_list_and_detail(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["id"], str(self.experience.id))
+        self.assertFalse(response.data[0]["is_starred"])
+        self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
+
+    def test_search_experience(self):
+        response = self.client.get(self.list_url, {"title": "Open House"})
+        self.assertEqual(len(response.data), 1)
+        response = self.client.get(self.list_url, {"title": "NotExist"})
+        self.assertEqual(response.data, [])
+
+    def test_guest_and_visitor_cannot_write(self):
+        for user in (None, self.visitor):
+            self.client.force_authenticate(user=user)
+            self.assertEqual(self.client.post(self.list_url, self.payload, format="json").status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(self.client.patch(self.detail_url, {"title": "New Title"}, format="json").status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(self.client.delete(self.detail_url).status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Experience.objects.count(), 1)
+        self.experience.refresh_from_db()
+        self.assertEqual(self.experience.title, "Open House Fasilkom UI")
+
+    def test_editor_can_patch_but_cannot_create_or_delete(self):
+        self.client.force_authenticate(user=self.editor)
+        # Dilarang create
+        self.assertEqual(self.client.post(self.list_url, self.payload, format="json").status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Experience.objects.count(), 1)
+
+        # Dilarang delete
+        self.assertEqual(self.client.delete(self.detail_url).status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Experience.objects.count(), 1)
+
+        # Boleh PATCH
+        response = self.client.patch(self.detail_url, {"role": "Lead Coordinator"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.experience.refresh_from_db()
+        self.assertEqual(self.experience.role, "Lead Coordinator")
+
+    def test_owner_can_create_and_delete(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Experience.objects.count(), 2)
+
+        # Owner delete
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Experience.objects.filter(pk=self.experience.id).exists())
+
+    def test_validation_strip_tags(self):
+        self.client.force_authenticate(user=self.owner)
+        bad_payload = {**self.payload, "title": "   "}
+        response = self.client.post(self.list_url, bad_payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("title", response.data)
+
+    def test_star_toggle(self):
+        # Anonymous ditolak
+        self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
+        # Login user biasa bisa memberi star
+        self.client.force_authenticate(user=self.visitor)
+        res = self.client.post(self.star_url)
+        self.assertTrue(res.data["is_starred"])
+        self.assertEqual(res.data["star_count"], 1)
+
+        # Batalkan star
+        res = self.client.post(self.star_url)
+        self.assertFalse(res.data["is_starred"])
+        self.assertEqual(res.data["star_count"], 0)
+
+    def test_csrf_protection_enforced(self):
+        client = APIClient(enforce_csrf_checks=True)
+        self.assertTrue(client.login(username="owner_exp", password="test-password"))
+        response = client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Experience.objects.count(), 1)
